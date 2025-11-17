@@ -8,7 +8,7 @@
 ## 1. 成果物のURL
 
 ■ **デモURL (Webアプリケーション)**
-[ https:// (ここにGitHub PagesなどのURLを記載) ]
+[https://ayt0916.github.io/med-staff-compass/]
 
 ■ **ソースコード (GitHub)**
 [ https://github.com/ (ここにリポジトリURLを記載) ]
