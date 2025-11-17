@@ -3,455 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Med-Staff Compass</title>
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js (CDN) -->
+    <title>Med-Staff Compass (MVP)</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- スタイルの定義 (プロトタイプのCSSをTailwindと共に利用) -->
-    <style>
-        /* Chart.jsがコンテナサイズに追従するように設定 */
-        .chart-container {
-            position: relative;
-            height: 40vh; /* 高さを調整 */
-            width: 100%;
-        }
-
-        /* モーダル (Tailwindでスタイリングしきれない部分を補完) */
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.6);
-        }
-        
-        /* 管理者ビューのヒートマップ（モック）用スタイル */
-        .heatmap-cell {
-            @apply w-12 h-12 border border-gray-200 rounded;
-        }
-        .load-low { background-color: #c6f6d5; } /* 緑 (低) */
-        .load-mid { background-color: #faf089; } /* 黄 (中) */
-        .load-high { background-color: #feb2b2; } /* 赤 (高) */
-    </style>
-
-    <!-- Tailwind CSSのカスタム設定 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        // 医療系で使われる信頼感のある青
-                        'med-blue': '#005a9c',
-                        'med-green': '#007b43',
-                        'med-red': '#e60012',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body>
 
-    <!-- ヘッダー -->
-    <header class="bg-med-blue text-white shadow-md">
-        <div class="container mx-auto px-6 py-4">
-            <h1 class="text-3xl font-bold">Med-Staff Compass</h1>
-            <p class="text-lg">医療スタッフのための統合ダッシュボード</p>
-        </div>
+    <header>
+        <h1>Med-Staff Compass (MVP)</h1>
+        <p>医療スタッフのための統合ダッシュボード</p>
     </header>
 
-    <!-- メインコンテンツ -->
-    <main class="container mx-auto px-6 py-8">
-
-        <!-- ユーザー情報 & ビュー切り替え -->
-        <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-6">
-            <p class="text-xl text-gray-700 mb-4 sm:mb-0">
-                ようこそ、<strong class="text-med-blue">田中 看護師</strong> さん (A病棟)
-            </p>
-            <div class="flex items-center space-x-4">
-                <!-- 管理者ビュー切り替えトグル -->
-                <div class="flex items-center space-x-2">
-                    <span class="text-gray-600">スタッフ</span>
-                    <label for="viewToggle" class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="viewToggle" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-med-blue"></div>
-                    </label>
-                    <span class="text-gray-600">管理者</span>
-                </div>
-                <button id="showSurveyBtn" class="bg-med-red text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-red-700 transition duration-300">
-                    ウィークリー・サーベイ回答
-                </button>
-            </div>
+    <main>
+        <div class="user-info">
+            <p>ようこそ、<strong>田中 看護師</strong> さん (A病棟)</p>
+            <button id="showSurveyBtn">ウィークリー・サーベイに回答</button>
         </div>
 
-        <!-- ====== スタッフビュー (デフォルト) ====== -->
-        <div id="staff-view">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- モジュール1: 物理的負荷 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール1】 物理的負荷サマリー</h2>
-                    <p class="text-gray-600 mb-4">
-                        今月と先月の業務負荷バランスです。
-                        「管理的負荷」の削減が「休憩・その他」の増加に繋がっているかを確認できます。
-                    </p>
-                    <!-- 動的サマリーメッセージ -->
-                    <div id="physicalLoadSummary" class="bg-blue-50 border-l-4 border-med-blue text-med-blue p-4 rounded-md mb-4">
-                        <!-- JSによってここにメッセージが挿入されます -->
-                    </div>
-                    <div class="flex flex-col md:flex-row gap-4 justify-around items-center">
-                        <div class="w-full md:w-1/2 chart-container h-[300px]">
-                            <h3 class="text-center text-lg font-semibold text-gray-700">今月の負荷</h3>
-                            <canvas id="physicalLoadChartCurrent"></canvas>
-                        </div>
-                        <div class="w-full md:w-1/2 chart-container h-[300px]">
-                            <h3 class="text-center text-lg font-semibold text-gray-700">先月の負荷</h3>
-                            <canvas id="physicalLoadChartPrevious"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- モジュール3: 心理的負荷 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール3】 心理的ウェルビーイング</h2>
-                    <p id="psychologicalLoadSummary" class="text-gray-600 mb-4">
-                        右上のボタンから「ウィークリー・サーベイ」に回答すると、あなたの最新の心理状態がレーダーチャートに反映されます。
-                    </p>
-                    <div class="chart-container h-[400px]">
-                        <canvas id="psychologicalLoadChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== 管理者ビュー (モックアップ) ====== -->
-        <div id="admin-view" class="hidden space-y-6">
+        <div class="dashboard-grid">
             
-            <!-- モジュール1-C: チーム負荷ヒートマップ (モック) -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール1-C】 チーム負荷ヒートマップ (モック)</h2>
-                <p class="text-gray-600 mb-4">
-                    （将来実装イメージ） 部署全体の「いつ」「誰の」負荷が高いかを可視化します。
-                    これにより、人員配置の偏りや、特定の時間帯に業務が集中していることを特定できます。
-                </p>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full text-center border-collapse border border-gray-300">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="p-2 border">時間帯</th>
-                                <th class="p-2 border">田中看護師</th>
-                                <th class="p-2 border">佐藤看護師</th>
-                                <th class="p-2 border">鈴木看護師</th>
-                                <th class="p-2 border">高橋看護師</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-2 border font-semibold">09:00-11:00</td>
-                                <td class="p-2 border"><div class="heatmap-cell load-mid mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-low mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-high mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-mid mx-auto"></div></td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border font-semibold">11:00-13:00</td>
-                                <td class="p-2 border"><div class="heatmap-cell load-high mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-high mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-mid mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-low mx-auto"></div></td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 border font-semibold">13:00-15:00</td>
-                                <td class="p-2 border"><div class="heatmap-cell load-low mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-mid mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-low mx-auto"></div></td>
-                                <td class="p-2 border"><div class="heatmap-cell load-mid mx-auto"></div></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="chart-container" id="physical-load">
+                <h2>モジュール1: 物理的負荷 (今週)</h2>
+                <p>業務の効率化が、あなたの「管理的負荷」を削減できています。</p>
+                <canvas id="physicalLoadChart"></canvas>
             </div>
 
-            <!-- モジュール3-B: 改善アクション (モック) -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール3-B】 改善アクション (モック)</h2>
-                <p class="text-gray-600 mb-4">
-                    （将来実装イメージ） 物理負荷と心理データをAIが分析し、具体的な改善策を提案します。
-                </p>
-                <div class="space-y-4">
-                    <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 p-4 rounded-md">
-                        <h3 class="font-bold">推奨アクション (高優先度)</h3>
-                        <p>分析の結果、A病棟では「管理的負荷（カルテ業務）」と「ストレスレベル（評価への不満）」に強い相関が見られます。
-                        <br>→ **対策:** 1on1ミーティングの実施と、カルテ入力プロセスの見直しを推奨します。</p>
-                    </div>
-                    <div class="bg-green-50 border-l-4 border-green-400 text-green-700 p-4 rounded-md">
-                        <h3 class="font-bold">推奨アクション (中優先度)</h3>
-                        <p>分析の結果、B病棟では夜勤帯の「身体的負荷」が突出しています。
-                        <br>→ **対策:** 夜勤の人員配置の見直し、または補助ツールの導入を検討してください。</p>
-                    </div>
-                </div>
+            <div class="chart-container" id="psychological-load">
+                <h2>モジュール3: 心理的負荷 (今週)</h2>
+                <p>サーベイに回答すると、あなたの心理的ウェルビーイングが分析されます。</p>
+                <canvas id="psychologicalLoadChart"></canvas>
             </div>
 
         </div>
     </main>
 
-    <!-- モジュール2: パルスサーベイ (モーダル) -->
-    <div id="surveyModal" class="modal fixed inset-0 z-50 items-center justify-center hidden">
-        <div class="modal-backdrop fixed inset-0"></div>
-        
-        <div class="modal-content bg-white w-11/12 max-w-2xl mx-auto p-8 rounded-lg shadow-2xl z-10 relative">
-            <!-- 閉じるボタン -->
-            <span id="closeSurveyBtn" class="close-btn absolute top-4 right-6 text-3xl text-gray-500 cursor-pointer hover:text-gray-800">&times;</span>
+    <div id="surveyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>ウィークリー・パルスサーベイ</h2>
+            <p>あなたの直近1週間の状態について、匿名で回答してください。</p>
             
-            <h2 class="text-3xl font-bold text-med-blue mb-4">ウィークリー・パルスサーベイ</h2>
-            <p class="text-gray-600 mb-6">あなたの直近1週間の状態について、匿名で回答してください。あなたの率直な声が職場環境の改善に繋がります。</p>
-            
-            <form id="pulseSurveyForm" class="space-y-6">
-                <!-- Q1 -->
+            <form id="pulseSurveyForm">
                 <div class="form-group">
-                    <label for="q1" class="block text-lg font-semibold text-gray-700 mb-2">Q1: 職場で十分なサポートを得られていると感じますか？</label>
-                    <select id="q1" name="q1" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-med-blue">
+                    <label for="q1">Q1: 職場で十分なサポートを得られていると感じますか？</label>
+                    <select id="q1" name="q1">
                         <option value="5">5: 強くそう思う</option>
                         <option value="4">4: そう思う</option>
-                        <option value="3" selected>3: どちらでもない</option>
+                        <option value="3">3: どちらでもない</option>
                         <option value="2">2: そう思わない</option>
                         <option value="1">1: 全くそう思わない</option>
                     </select>
                 </div>
                 
-                <!-- Q2 -->
                 <div class="form-group">
-                    <label for="q2" class="block text-lg font-semibold text-gray-700 mb-2">Q2: 自分の仕事が正当に評価されていると感じますか？</label>
-                    <select id="q2" name="q2" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-med-blue">
+                    <label for="q2">Q2: 自分の仕事が正当に評価されていると感じますか？</label>
+                    <select id="q2" name="q2">
                         <option value="5">5: 強くそう思う</option>
                         <option value="4">4: そう思う</option>
-                        <option value="3" selected>3: どちらでもない</option>
+                        <option value="3">3: どちらでもない</option>
                         <option value="2">2: そう思わない</option>
                         <option value="1">1: 全くそう思わない</option>
                     </select>
                 </div>
 
-                <!-- Q3 -->
                 <div class="form-group">
-                    <label for="q3" class="block text-lg font-semibold text-gray-700 mb-2">Q3: 業務における精神的なストレスはどの程度ですか？</label>
-                    <select id="q3" name="q3" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-med-blue">
+                    <label for="q3">Q3: 業務における精神的なストレスはどの程度ですか？</label>
+                    <select id="q3" name="q3">
                         <option value="1">1: 非常に低い</option>
                         <option value="2">2: 低い</option>
-                        <option value="3" selected>3: 普通</option>
+                        <option value="3">3: 普通</option>
                         <option value="4">4: 高い</option>
                         <option value="5">5: 非常に高い</option>
                     </select>
                 </div>
                 
-                <button type="submit" class="submit-btn w-full bg-med-green text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-700 transition duration-300 text-lg">
-                    回答を送信する
-                </button>
+                <button type="submit" class="submit-btn">回答を送信</button>
             </form>
         </div>
     </div>
 
-
-    <!-- メインのJavaScript -->
-    <script type="module">
-        // ページの読み込みが完了したら実行
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // --- チャートのインスタンスをグローバルに保持 ---
-            let physicalLoadChartCurrent;
-            let physicalLoadChartPrevious;
-            let psychologicalLoadChart;
-
-            // --- チャート描画のコンテキストを取得 ---
-            const physicalCtxCurrent = document.getElementById('physicalLoadChartCurrent').getContext('2d');
-            const physicalCtxPrevious = document.getElementById('physicalLoadChartPrevious').getContext('2d');
-            const psychologicalCtx = document.getElementById('psychologicalLoadChart').getContext('2d');
-
-            // --- デモ用データ ---
-            // 設計書の意図（効率化＝負担軽減）をデモデータで表現
-            const demoData = {
-                labels: ['身体的負荷 (患者ケア)', '管理的負荷 (カルテ記入)', 'その他 (休憩・移動)'],
-                physicalLoad: {
-                    current: [50, 20, 30],  // 今月: 管理的負荷20%, その他30%
-                    previous: [55, 30, 15] // 先月: 管理的負荷30%, その他15%
-                },
-                psychologicalLoad: [0, 0, 0] // 初期値
-            };
-
-            // --- チャート共通設定 ---
-            const chartColors = {
-                physical: 'rgba(255, 99, 132, 0.8)', // 身体的
-                admin: 'rgba(54, 162, 235, 0.8)',    // 管理的
-                other: 'rgba(75, 192, 192, 0.8)'     // その他
-            };
-            
-            const doughnutOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return ` ${context.label}: ${context.parsed}%`;
-                            }
-                        }
-                    }
-                }
-            };
-
-            // --- モジュール1: 物理的負荷ダッシュボード ---
-            function renderPhysicalLoadChart() {
-                // (1) サマリーメッセージを生成
-                const currentAdminLoad = demoData.physicalLoad.current[1];
-                const prevAdminLoad = demoData.physicalLoad.previous[1];
-                const adminDiff = currentAdminLoad - prevAdminLoad;
-                
-                const currentOtherLoad = demoData.physicalLoad.current[2];
-                const prevOtherLoad = demoData.physicalLoad.previous[2];
-                const otherDiff = currentOtherLoad - prevOtherLoad;
-                
-                let summaryHtml = `
-                    <p class="font-semibold">先月との比較:</p>
-                    <ul class="list-disc list-inside">
-                        <li><strong>管理的負荷:</strong> ${currentAdminLoad}% <span class="font-bold ${adminDiff <= 0 ? 'text-green-600' : 'text-red-600'}">(${adminDiff > 0 ? '+' : ''}${adminDiff}%)</span></li>
-                        <li><strong>その他(休憩等):</strong> ${currentOtherLoad}% <span class="font-bold ${otherDiff >= 0 ? 'text-green-600' : 'text-red-600'}">(${otherDiff > 0 ? '+' : ''}${otherDiff}%)</span></li>
-                    </ul>
-                `;
-                
-                if (adminDiff < 0 && otherDiff > 0) {
-                    summaryHtml += `<p class="mt-2 font-semibold text-green-700">素晴らしい！管理的負荷が削減され、休憩時間が確保できています。</p>`;
-                } else if (adminDiff > 0) {
-                     summaryHtml += `<p class="mt-2 font-semibold text-red-700">注意: 管理的負荷が増加しています。業務プロセスの見直しが必要です。</p>`;
-                }
-
-                document.getElementById('physicalLoadSummary').innerHTML = summaryHtml;
-                
-
-                // (2) 今月のチャートを描画
-                physicalLoadChartCurrent = new Chart(physicalCtxCurrent, {
-                    type: 'doughnut',
-                    data: {
-                        labels: demoData.labels,
-                        datasets: [{
-                            label: '今月の負荷',
-                            data: demoData.physicalLoad.current,
-                            backgroundColor: [chartColors.physical, chartColors.admin, chartColors.other],
-                        }]
-                    },
-                    options: doughnutOptions
-                });
-                
-                // (3) 先月のチャートを描画
-                physicalLoadChartPrevious = new Chart(physicalCtxPrevious, {
-                    type: 'doughnut',
-                    data: {
-                        labels: demoData.labels,
-                        datasets: [{
-                            label: '先月の負荷',
-                            data: demoData.physicalLoad.previous,
-                            backgroundColor: [chartColors.physical, chartColors.admin, chartColors.other],
-                        }]
-                    },
-                    options: doughnutOptions
-                });
-            }
-
-            // --- モジュール3: 心理的負荷ダッシュボード ---
-            function renderPsychologicalChart() {
-                psychologicalLoadChart = new Chart(psychologicalCtx, {
-                    type: 'radar',
-                    data: {
-                        labels: ['職場のサポート', '業務の評価', 'ストレス耐性 (高いほど良い)'],
-                        datasets: [{
-                            label: 'あなたのウェルビーイング',
-                            data: demoData.psychologicalLoad,
-                            fill: true,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgb(54, 162, 235)',
-                            pointBackgroundColor: 'rgb(54, 162, 235)',
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                min: 0,
-                                max: 5,
-                                ticks: { stepSize: 1, backdropColor: 'transparent' },
-                                pointLabels: { fontSize: 14, font: { weight: 'bold' } }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
-                });
-            }
-
-            // --- モジュール2: パルスサーベイ (モーダル制御) ---
-            const modal = document.getElementById('surveyModal');
-            const showBtn = document.getElementById('showSurveyBtn');
-            const closeBtn = document.getElementById('closeSurveyBtn');
-            const modalBackdrop = document.querySelector('.modal-backdrop');
-
-            const showModal = () => modal.classList.replace('hidden', 'flex');
-            const hideModal = () => modal.classList.replace('flex', 'hidden');
-
-            showBtn.onclick = showModal;
-            closeBtn.onclick = hideModal;
-            modalBackdrop.onclick = hideModal;
-
-            // --- サーベイの「送信」処理 ---
-            const form = document.getElementById('pulseSurveyForm');
-            form.onsubmit = (event) => {
-                event.preventDefault(); // ページ遷移を防ぐ
-
-                // フォームから値を取得 (数値に変換)
-                const q1Value = parseInt(document.getElementById('q1').value);
-                const q2Value = parseInt(document.getElementById('q2').value);
-                // Q3 (ストレス)はスコアを反転 (5:高い -> 1:低い, 1:低い -> 5:高い)
-                // これにより、チャートは「全て5に近いほど良い状態」を示す
-                const q3Value = 6 - parseInt(document.getElementById('q3').value);
-
-                // モジュール3のグラフデータを更新
-                psychologicalLoadChart.data.datasets[0].data = [q1Value, q2Value, q3Value];
-                psychologicalLoadChart.update(); // グラフを再描画
-
-                // モーダルを閉じ、ボタンを非表示にする
-                hideModal();
-                showBtn.style.display = 'none'; // 回答済みのため非表示
-                
-                // メッセージを更新
-                document.getElementById('psychologicalLoadSummary').textContent = 'サーベイへのご協力、ありがとうございました。あなたの最新のウェルビーイング状態がチャートに反映されました。';
-            };
-
-            // --- ビュー切り替え処理 ---
-            const viewToggle = document.getElementById('viewToggle');
-            const staffView = document.getElementById('staff-view');
-            const adminView = document.getElementById('admin-view');
-
-            viewToggle.addEventListener('change', (event) => {
-                if (event.target.checked) {
-                    // 管理者ビューを表示
-                    staffView.classList.add('hidden');
-                    adminView.classList.remove('hidden');
-                } else {
-                    // スタッフビューを表示
-                    staffView.classList.remove('hidden');
-                    adminView.classList.add('hidden');
-                }
-            });
-
-
-            // --- 初期化 ---
-            // ページ読み込み時に両方のグラフを初期描画
-            renderPhysicalLoadChart();
-            renderPsychologicalChart();
-
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
