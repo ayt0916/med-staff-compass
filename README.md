@@ -11,7 +11,7 @@
 [https://ayt0916.github.io/med-staff-compass/]
 
 ■ **ソースコード (GitHub)**
-[ https://github.com/ (ここにリポジトリURLを記載) ]
+[https://github.com/ayt0916/med-staff-compass]
 
 ---
 
@@ -83,11 +83,8 @@
 * **フロントエンド:** HTML, CSS, JavaScript (ES Modules)
 * **CSSフレームワーク:** Tailwind CSS (CDN)
 * **グラフライブラリ:** Chart.js (CDN)
-* **開発環境:** (ローカル開発環境やビルドツールなどを使用した場合、ここに記載)
-* **ホスティング:** GitHub Pages (予定)
+* **ホスティング:** GitHub Pages 
 
 ---
 
-## 6. チーム開発の場合の担当箇所
 
-(本成果物は個人開発です)
