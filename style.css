@@ -46,8 +46,6 @@ main {
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
 }
 
 .chart-container h2 {
@@ -142,23 +140,4 @@ button#showSurveyBtn:hover {
 }
 .submit-btn:hover {
     background-color: #005a30;
-}
-
-/* ★ 修正点2: 比較ボタンのスタイルを追加 ★ */
-.toggle-buttons {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.toggle-btn {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-.toggle-btn:hover {
-    background-color: #e0e0e0;
 }
