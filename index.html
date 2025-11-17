@@ -17,19 +17,22 @@
     <main>
         <div class="user-info">
             <p>ようこそ、<strong>田中 看護師</strong> さん (A病棟)</p>
-            <button id="showSurveyBtn">ウィークリー・サーベイに回答</button>
+            <button id="showSurveyBtn">モジュール2: 心理サーベイに回答</button>
         </div>
 
         <div class="dashboard-grid">
             
             <div class="chart-container" id="physical-load">
-                <h2>モジュール1: 物理的負荷 (今週)</h2>
+                <h2>モジュール1: 物理的負荷 (今月)</h2>
                 <p>業務の効率化が、あなたの「管理的負荷」を削減できています。</p>
                 <canvas id="physicalLoadChart"></canvas>
+                <div class="toggle-buttons">
+                    <button id="toggleDataBtn" class="toggle-btn">先月の負荷と比較</button>
+                </div>
             </div>
 
             <div class="chart-container" id="psychological-load">
-                <h2>モジュール3: 心理的負荷 (今週)</h2>
+                <h2>モジュール3: 統合ダッシュボード (今週)</h2>
                 <p>サーベイに回答すると、あなたの心理的ウェルビーイングが分析されます。</p>
                 <canvas id="psychologicalLoadChart"></canvas>
             </div>
@@ -40,7 +43,7 @@
     <div id="surveyModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <h2>ウィークリー・パルスサーベイ</h2>
+            <h2>モジュール2: ウィークリー・パルスサーベイ</h2>
             <p>あなたの直近1週間の状態について、匿名で回答してください。</p>
             
             <form id="pulseSurveyForm">
@@ -49,7 +52,7 @@
                     <select id="q1" name="q1">
                         <option value="5">5: 強くそう思う</option>
                         <option value="4">4: そう思う</option>
-                        <option value="3">3: どちらでもない</option>
+                        <option value="3" selected>3: どちらでもない</option>
                         <option value="2">2: そう思わない</option>
                         <option value="1">1: 全くそう思わない</option>
                     </select>
@@ -60,20 +63,20 @@
                     <select id="q2" name="q2">
                         <option value="5">5: 強くそう思う</option>
                         <option value="4">4: そう思う</option>
-                        <option value="3">3: どちらでもない</option>
+                        <option value="3" selected>3: どちらでもない</option>
                         <option value="2">2: そう思わない</option>
                         <option value="1">1: 全くそう思わない</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="q3">Q3: 業務における精神的なストレスはどの程度ですか？</label>
+                    <label for="q3">Q3: 業務において、心はどの程度平穏でしたか？</label>
                     <select id="q3" name="q3">
-                        <option value="1">1: 非常に低い</option>
-                        <option value="2">2: 低い</option>
-                        <option value="3">3: 普通</option>
-                        <option value="4">4: 高い</option>
-                        <option value="5">5: 非常に高い</option>
+                        <option value="5">5: 非常に平穏だった</option>
+                        <option value="4">4: 平穏だった</option>
+                        <option value="3" selected>3: どちらでもない</option>
+                        <option value="2">2: ストレスを感じた</option>
+                        <option value="1">1: 非常にストレスだった</option>
                     </select>
                 </div>
                 
