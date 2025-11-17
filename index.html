@@ -10,10 +10,9 @@
     <style>
         .chart-container {
             position: relative;
-            height: 40vh; /* 高さを調整 */
+            height: 40vh;
             width: 100%;
         }
-        /* ★管理者用チャートの高さを調整 */
         .admin-chart-container {
              position: relative;
             height: 300px;
@@ -49,14 +48,14 @@
     <header class="bg-med-blue text-white shadow-md">
         <div class="container mx-auto px-6 py-4">
             <h1 class="text-3xl font-bold">Med-Staff Compass</h1>
-            <p class="text-lg">医療スタッフのための統合ダッシュボード</p>
+            <p class="text-lg">業務負荷とウェルビーイングの可視化ダッシュボード</p>
         </div>
     </header>
 
     <main class="container mx-auto px-6 py-8">
 
         <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-6">
-            <p class="text-xl text-gray-700 mb-4 sm:mb-0">
+            <p id="userGreeting" class="text-xl text-gray-700 mb-4 sm:mb-0">
                 ようこそ、<strong class="text-med-blue">田中 看護師</strong> さん (A病棟)
             </p>
             <div class="flex items-center space-x-4">
@@ -78,10 +77,10 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール1】 物理的負荷サマリー</h2>
+                    <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">業務負荷バランス (個人)</h2>
                     <p class="text-gray-600 mb-4">
                         今月と先月の業務負荷バランスです。
-                        「管理的負荷」の削減が「休憩・その他」の増加に繋がっているかを確認できます。
+                        「管理的負担」の削減が「休憩・その他」の増加に繋がっているかを確認できます。
                     </p>
                     <div id="physicalLoadSummary" class="bg-blue-50 border-l-4 border-med-blue text-med-blue p-4 rounded-md mb-4">
                         </div>
@@ -98,7 +97,7 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール3】 心理的ウェルビーイング</h2>
+                    <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">心理的ウェルビーイング (個人)</h2>
                     <p id="psychologicalLoadSummary" class="text-gray-600 mb-4">
                         右上のボタンから「ウィークリー・サーベイ」に回答すると、あなたの最新の心理状態がレーダーチャートに反映されます。
                     </p>
@@ -112,10 +111,10 @@
         <div id="admin-view" class="hidden space-y-6">
             
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール3-A】 統合相関分析ダッシュボード (A病棟 全体)</h2>
+                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">統合相関分析ダッシュボード (A病棟 全体)</h2>
                 <p class="text-gray-600 mb-4">
                     チーム全体の「物理的負荷の推移」と「心理的ウェルビーイングの平均」を相関分析します。
-                    「管理的負荷の削減（左下）」が「休憩の増加（左下）」と「ウェルビーイングの改善（右）」に繋がっているかを確認します。
+                    「管理的負担の削減（左下）」が「休憩の増加（左下）」と「ウェルビーイングの改善（右）」に繋がっているかを確認します。
                 </p>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="space-y-4">
@@ -138,8 +137,10 @@
                     </div>
                 </div>
             </div>
+
+
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール1-C】 チーム負荷ヒートマップ (モック)</h2>
+                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">チーム負荷ヒートマップ (モック)</h2>
                 <p class="text-gray-600 mb-4">
                     （将来実装イメージ） 部署全体の「いつ」「誰の」負荷が高いかを可視化します。
                     これにより、人員配置の偏りや、特定の時間帯に業務が集中していることを特定できます。
@@ -183,14 +184,14 @@
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">【モジュール3-B】 改善アクション (モック)</h2>
+                <h2 class="text-2xl font-bold text-med-blue mb-4 border-b pb-2">改善アクション (モック)</h2>
                 <p class="text-gray-600 mb-4">
-                    （将来実装イメージ） 統合ダッシュボード(3-A)とヒートマップ(1-C)の分析に基づき、具体的な改善策を提案します。
+                    （将来実装イメージ） 統合ダッシュボードとヒートマップの分析に基づき、具体的な改善策を提案します。
                 </p>
                 <div class="space-y-4">
                     <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 p-4 rounded-md">
                         <h3 class="font-bold">推奨アクション (高優先度)</h3>
-                        <p>分析の結果、A病棟では「管理的負荷（カルテ業務）」と「ストレスレベル（評価への不満）」に強い相関が見られます。
+                        <p>分析の結果、A病棟では「管理的負担」と「ストレスレベル（評価への不満）」に強い相関が見られます。
                         <br>→ <strong>対策:</strong> 1on1ミーティングの実施と、カルテ入力プロセスの見直しを推奨します。</p>
                     </div>
                     <div class="bg-green-50 border-l-4 border-green-400 text-green-700 p-4 rounded-md">
@@ -254,39 +255,39 @@
 
             // --- チャートのインスタンス ---
             let physicalLoadChartCurrent, physicalLoadChartPrevious, psychologicalLoadChart;
-            // ★管理者ビュー用チャートインスタンスを追加
             let adminLoadChartCurrent, adminLoadChartPrevious, adminWellbeingChart;
 
-            // --- チャート描画のコンテキスト ---
+            // --- DOM要素 ---
             const physicalCtxCurrent = document.getElementById('physicalLoadChartCurrent').getContext('2d');
             const physicalCtxPrevious = document.getElementById('physicalLoadChartPrevious').getContext('2d');
             const psychologicalCtx = document.getElementById('psychologicalLoadChart').getContext('2d');
-            // ★管理者ビュー用コンテキストを追加
             const adminLoadCtxCurrent = document.getElementById('adminLoadChartCurrent').getContext('2d');
             const adminLoadCtxPrevious = document.getElementById('adminLoadChartPrevious').getContext('2d');
             const adminWellbeingCtx = document.getElementById('adminWellbeingChart').getContext('2d');
+            // ★挨拶文の要素
+            const userGreetingEl = document.getElementById('userGreeting');
 
 
-            // --- デモ用データ ---
+            // --- ★チャートラベル (変更) ---
             const chartLabels = {
-                physical: ['身体的負荷 (患者ケア)', '管理的負荷 (カルテ記入)', 'その他 (休憩・移動)'],
-                psychological: ['職場のサポート', '業務の評価', 'ストレス耐性 (高いほど良い)']
+                physical: ['身体的負荷 (患者ケアなど)', '管理的負担 (カルテ記入など)', 'その他 (休憩・移動など)'],
+                psychological: ['職場のサポート満足度', '業務の評価満足度', 'ノンストレス度']
             };
             
             // (個人) 田中看護師のデータ
             const staffData = {
                 physicalLoad: {
-                    current: [50, 20, 30],  // 今月: 管理的負荷20%, その他30%
-                    previous: [55, 30, 15] // 先月: 管理的負荷30%, その他15%
+                    current: [50, 20, 30],
+                    previous: [55, 30, 15]
                 },
                 psychologicalLoad: [0, 0, 0] // 初期値
             };
 
-            // ★(管理者) チーム全体の集計データ
+            // (管理者) チーム全体の集計データ
             const adminData = {
                  physicalLoad: {
-                    current: [48, 22, 30],  // チーム今月: 管理的負荷22%, その他30%
-                    previous: [50, 35, 15] // チーム先月: 管理的負荷35%, その他15%
+                    current: [48, 22, 30],
+                    previous: [50, 35, 15]
                 },
                 psychologicalLoad: [3.2, 2.9, 3.8] // チームの平均スコア
             };
@@ -330,13 +331,11 @@
             };
 
 
-            // --- モジュール1: (スタッフ) 物理的負荷ダッシュボード ---
+            // --- (スタッフ) 物理的負荷ダッシュボード ---
             function renderStaffPhysicalLoadChart() {
-                // (1) サマリーメッセージ
                 const currentAdminLoad = staffData.physicalLoad.current[1];
                 const prevAdminLoad = staffData.physicalLoad.previous[1];
                 const adminDiff = currentAdminLoad - prevAdminLoad;
-                
                 const currentOtherLoad = staffData.physicalLoad.current[2];
                 const prevOtherLoad = staffData.physicalLoad.previous[2];
                 const otherDiff = currentOtherLoad - prevOtherLoad;
@@ -344,42 +343,40 @@
                 let summaryHtml = `
                     <p class="font-semibold">(個人) 先月との比較:</p>
                     <ul class="list-disc list-inside">
-                        <li><strong>管理的負荷:</strong> ${currentAdminLoad}% <span class="font-bold ${adminDiff <= 0 ? 'text-green-600' : 'text-red-600'}">(${adminDiff > 0 ? '+' : ''}${adminDiff}%)</span></li>
+                        <li><strong>管理的負担:</strong> ${currentAdminLoad}% <span class="font-bold ${adminDiff <= 0 ? 'text-green-600' : 'text-red-600'}">(${adminDiff > 0 ? '+' : ''}${adminDiff}%)</span></li>
                         <li><strong>その他(休憩等):</strong> ${currentOtherLoad}% <span class="font-bold ${otherDiff >= 0 ? 'text-green-600' : 'text-red-600'}">(${otherDiff > 0 ? '+' : ''}${otherDiff}%)</span></li>
                     </ul>
                 `;
                 if (adminDiff < 0 && otherDiff > 0) {
-                    summaryHtml += `<p class="mt-2 font-semibold text-green-700">素晴らしい！管理的負荷が削減され、休憩時間が確保できています。</p>`;
+                    summaryHtml += `<p class="mt-2 font-semibold text-green-700">素晴らしい！管理的負担が削減され、休憩時間が確保できています。</p>`;
                 }
                 document.getElementById('physicalLoadSummary').innerHTML = summaryHtml;
                 
-                // (2) 今月のチャート
                 physicalLoadChartCurrent = new Chart(physicalCtxCurrent, {
                     type: 'doughnut',
                     data: {
-                        labels: chartLabels.physical,
+                        labels: chartLabels.physical, // ★ラベル変更
                         datasets: [{ data: staffData.physicalLoad.current, backgroundColor: [chartColors.physical, chartColors.admin, chartColors.other] }]
                     },
                     options: doughnutOptions
                 });
                 
-                // (3) 先月のチャート
                 physicalLoadChartPrevious = new Chart(physicalCtxPrevious, {
                     type: 'doughnut',
                     data: {
-                        labels: chartLabels.physical,
+                        labels: chartLabels.physical, // ★ラベル変更
                         datasets: [{ data: staffData.physicalLoad.previous, backgroundColor: [chartColors.physical, chartColors.admin, chartColors.other] }]
                     },
                     options: doughnutOptions
                 });
             }
 
-            // --- モジュール3: (スタッフ) 心理的負荷ダッシュボード ---
+            // --- (スタッフ) 心理的負荷ダッシュボード ---
             function renderStaffPsychologicalChart() {
                 psychologicalLoadChart = new Chart(psychologicalCtx, {
                     type: 'radar',
                     data: {
-                        labels: chartLabels.psychological,
+                        labels: chartLabels.psychological, // ★ラベル変更
                         datasets: [{
                             label: 'あなたのウェルビーイング',
                             data: staffData.psychologicalLoad,
@@ -393,14 +390,11 @@
                 });
             }
 
-            // --- ★★★★★ 新規追加 ★★★★★ ---
-            // --- モジュール3-A: (管理者) 統合ダッシュボード ---
+            // --- (管理者) 統合ダッシュボード ---
             function renderAdminCharts() {
-                // (1) チーム物理負荷サマリー
                 const currentAdminLoad = adminData.physicalLoad.current[1];
                 const prevAdminLoad = adminData.physicalLoad.previous[1];
                 const adminDiff = currentAdminLoad - prevAdminLoad;
-                
                 const currentOtherLoad = adminData.physicalLoad.current[2];
                 const prevOtherLoad = adminData.physicalLoad.previous[2];
                 const otherDiff = currentOtherLoad - prevOtherLoad;
@@ -408,7 +402,7 @@
                 let summaryHtml = `
                     <p class="font-semibold">(チーム全体) 先月との比較:</p>
                     <ul class="list-disc list-inside">
-                        <li><strong>管理的負荷:</strong> ${currentAdminLoad}% <span class="font-bold ${adminDiff <= 0 ? 'text-green-600' : 'text-red-600'}">(${adminDiff > 0 ? '+' : ''}${adminDiff}%)</span></li>
+                        <li><strong>管理的負担:</strong> ${currentAdminLoad}% <span class="font-bold ${adminDiff <= 0 ? 'text-green-600' : 'text-red-600'}">(${adminDiff > 0 ? '+' : ''}${adminDiff}%)</span></li>
                         <li><strong>その他(休憩等):</strong> ${currentOtherLoad}% <span class="font-bold ${otherDiff >= 0 ? 'text-green-600' : 'text-red-600'}">(${otherDiff > 0 ? '+' : ''}${otherDiff}%)</span></li>
                     </ul>
                 `;
@@ -419,31 +413,28 @@
                 }
                 document.getElementById('adminLoadSummary').innerHTML = summaryHtml;
 
-                // (2) チーム今月 (物理)
                 adminLoadChartCurrent = new Chart(adminLoadCtxCurrent, {
                     type: 'doughnut',
                     data: {
-                        labels: chartLabels.physical,
+                        labels: chartLabels.physical, // ★ラベル変更
                         datasets: [{ data: adminData.physicalLoad.current, backgroundColor: [chartColors.physical, chartColors.admin, chartColors.other] }]
                     },
                     options: doughnutOptions
                 });
 
-                // (3) チーム先月 (物理)
                 adminLoadChartPrevious = new Chart(adminLoadCtxPrevious, {
                     type: 'doughnut',
                     data: {
-                        labels: chartLabels.physical,
+                        labels: chartLabels.physical, // ★ラベル変更
                         datasets: [{ data: adminData.physicalLoad.previous, backgroundColor: [chartColors.physical, chartColors.admin, chartColors.other] }]
                     },
                     options: doughnutOptions
                 });
 
-                // (4) チーム今月 (心理)
                 adminWellbeingChart = new Chart(adminWellbeingCtx, {
                     type: 'radar',
                     data: {
-                        labels: chartLabels.psychological,
+                        labels: chartLabels.psychological, // ★ラベル変更
                         datasets: [{
                             label: 'チームのウェルビーイング (平均)',
                             data: adminData.psychologicalLoad,
@@ -456,10 +447,9 @@
                     options: radarOptions
                 });
             }
-            // --- ★★★★★ 新規追加ここまで ★★★★★ ---
 
 
-            // --- モジュール2: パルスサーベイ (モーダル制御) ---
+            // --- パルスサーベイ (モーダル制御) ---
             const modal = document.getElementById('surveyModal');
             const showBtn = document.getElementById('showSurveyBtn');
             const closeBtn = document.getElementById('closeSurveyBtn');
@@ -476,7 +466,8 @@
                 event.preventDefault(); 
                 const q1Value = parseInt(document.getElementById('q1').value);
                 const q2Value = parseInt(document.getElementById('q2').value);
-                const q3Value = 6 - parseInt(document.getElementById('q3').value); // スコア反転
+                // ★「ノンストレス度」に合わせるためスコアを反転
+                const q3Value = 6 - parseInt(document.getElementById('q3').value); 
 
                 // (スタッフ) 心理グラフデータを更新
                 psychologicalLoadChart.data.datasets[0].data = [q1Value, q2Value, q3Value];
@@ -487,27 +478,39 @@
                 document.getElementById('psychologicalLoadSummary').textContent = 'サーベイへのご協力、ありがとうございました。あなたの最新のウェルビーイング状態がチャートに反映されました。';
             };
 
-            // --- ビュー切り替え処理 ---
+            // --- ★ビュー切り替え処理 (挨拶文変更を追加) ---
             const viewToggle = document.getElementById('viewToggle');
             const staffView = document.getElementById('staff-view');
             const adminView = document.getElementById('admin-view');
+            const originalGreeting = userGreetingEl.innerHTML; // 元の挨拶文を記憶
 
             viewToggle.addEventListener('change', (event) => {
                 if (event.target.checked) {
+                    // 管理者ビュー
                     staffView.classList.add('hidden');
                     adminView.classList.remove('hidden');
+                    // 挨拶文を変更
+                    userGreetingEl.innerHTML = `<strong class="text-med-blue">A病棟 管理者ダッシュボード</strong>`;
+                    // スタッフ個人用サーベイボタンを非表示
+                    showBtn.style.display = 'none'; 
                 } else {
+                    // スタッフビュー
                     staffView.classList.remove('hidden');
                     adminView.classList.add('hidden');
+                    // 挨拶文を戻す
+                    userGreetingEl.innerHTML = originalGreeting;
+                     // サーベイボタンを再表示 (回答済みでなければ)
+                    if (document.getElementById('psychologicalLoadSummary').textContent.includes('回答すると')) {
+                         showBtn.style.display = 'block';
+                    }
                 }
             });
 
 
             // --- 初期化 ---
-            // ★全てのグラフを初期描画する
             renderStaffPhysicalLoadChart();
             renderStaffPsychologicalChart();
-            renderAdminCharts(); // ★管理者チャートも初期描画
+            renderAdminCharts(); 
 
         });
     </script>
